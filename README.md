@@ -47,7 +47,7 @@ Read-only context import from other Claude Code sessions. Discover sessions, rea
 Inside Claude Code, run:
 
 ```
-/plugin marketplace add KyubumShin/cmux-skills
+/plugin marketplace add https://github.com/KyubumShin/cmux-skills
 /plugin install cmux-skills
 ```
 

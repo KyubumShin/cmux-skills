@@ -44,18 +44,11 @@ Read-only context import from other Claude Code sessions. Discover sessions, rea
 
 ## Installation
 
-### 1. Add marketplace
+Inside Claude Code, run:
 
-```bash
-claude mcp add-marketplace cmux-skills \
-  --source github \
-  --repo KyubumShin/cmux-skills
 ```
-
-### 2. Install plugin
-
-```bash
-claude /install-plugin cmux-skills
+/plugin marketplace add KyubumShin/cmux-skills
+/plugin install cmux-skills
 ```
 
 After installation, the `/cmux-control` and `/cmux-get` skills will be available in all Claude Code sessions.

@@ -1,0 +1,19 @@
+{
+  "name": "cmux-skills",
+  "version": "0.1.0",
+  "description": "Cross-session control and context sharing for Claude Code via cmux terminal multiplexer. Includes cmux-control (remote operation) and cmux-get (read-only context import).",
+  "author": {
+    "name": "Kyubum Shin",
+    "email": "skbum0617@gmail.com"
+  },
+  "repository": "https://github.com/KyubumShin/cmux-skills",
+  "license": "MIT",
+  "keywords": [
+    "cmux",
+    "cross-session",
+    "proxy-control",
+    "interview-automation",
+    "multi-agent",
+    "terminal-multiplexer"
+  ]
+}

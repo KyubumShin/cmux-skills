@@ -12,7 +12,7 @@
       "name": "cmux-skills",
       "description": "Remote control (cmux-control) and context import (cmux-get) for Claude Code sessions via cmux",
       "version": "0.1.0",
-      "source": ".",
+      "source": "./",
       "category": "productivity"
     }
   ]

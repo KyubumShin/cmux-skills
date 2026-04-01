@@ -1,7 +1,7 @@
 {
   "name": "cmux-skills",
   "version": "0.1.0",
-  "description": "Cross-session control and context sharing for Claude Code via cmux terminal multiplexer. Includes cmux-control (remote operation) and cmux-get (read-only context import).",
+  "description": "Cross-session control, context sharing, and markdown preview for Claude Code via cmux terminal multiplexer. Includes cmux-control (remote operation), cmux-get (read-only context import), and cmux-md-preview (interactive markdown preview with checkbox sync).",
   "author": {
     "name": "Kyubum Shin",
     "email": "skbum0617@gmail.com"

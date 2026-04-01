@@ -1,0 +1,27 @@
+{
+  "description": "Auto-open markdown preview for files containing checkboxes after Write/Edit",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/skills/cmux-md-preview/scripts/cmux-md-preview.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/skills/cmux-md-preview/scripts/cmux-md-preview.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

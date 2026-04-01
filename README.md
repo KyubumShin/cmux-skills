@@ -36,6 +36,22 @@ Read-only context import from other Claude Code sessions. Discover sessions, rea
 - Content cleaning: strips spinners, ANSI codes, UI chrome
 - Multi-surface selection
 
+### cmux-md-preview
+
+Interactive markdown preview in cmux browser pane with dark theme. Checkboxes are clickable and sync back to the source `.md` file. Useful as a checklist selection UI when `AskUserQuestion` option limits are too restrictive.
+
+```bash
+/cmux-md-preview README.md
+/cmux-md-preview /path/to/checklist.md
+```
+
+**Key capabilities:**
+- Dark-themed HTML rendering via `marked`
+- Clickable checkboxes synced to source `.md` file
+- Smart pane reuse: reuses existing non-caller pane instead of always splitting
+- Auto-preview hook: `.md` files with checkboxes open automatically after Write/Edit
+- Auto-refresh on external file changes (2s polling)
+
 ## Requirements
 
 - [cmux](https://cmux.com) terminal multiplexer
@@ -51,7 +67,7 @@ Inside Claude Code, run:
 /plugin install cmux-skills
 ```
 
-After installation, the `/cmux-control` and `/cmux-get` skills will be available in all Claude Code sessions.
+After installation, the `/cmux-control`, `/cmux-get`, and `/cmux-md-preview` skills will be available in all Claude Code sessions.
 
 ## Tested Behaviors
 

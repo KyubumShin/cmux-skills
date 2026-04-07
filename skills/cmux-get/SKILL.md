@@ -263,6 +263,10 @@ Every read (diff or `--all`) updates the checkpoint. It's a "last read" marker, 
 
 Use `workspace:<ref>/surface:<ref>` as the key. If a surface moves between workspaces (rare), it gets a new key — the old checkpoint becomes orphaned but harmless.
 
+### Shared with cmux-control
+
+`cmux-control` reads and writes the **same** `.cmux-get/checkpoints.json` file using the **same key format**. This means a control session followed by a get (or vice versa) on the same target stays coherent — neither skill re-reads content the other already saw. Both skills must preserve this schema exactly.
+
 ### Cleanup
 
 Checkpoints older than 24 hours are stale (scrollback likely overflowed). On each skill invocation, prune entries with timestamps older than 24h.

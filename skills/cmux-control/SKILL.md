@@ -29,8 +29,17 @@ Many Claude Code workflows require human interaction — answering interview que
 - `prompt:"<text>"`: initial prompt to send to Target
 - `answers:/path/to/file.json`: pre-defined answers for interview workflow
 - `spec:/path/to/spec.md`: act as virtual user based on spec document
-- `--auto-permit`: automatically approve all permission prompts (default for execute workflow)
+- `--auto-permit`: automatically approve permission prompts by sending `1` (**default for ALL workflows**)
+- `--ask-permit`: opt-out — escalate each permission prompt to the Harness user instead of auto-approving
 - `--no-free-text`: don't force free-text-only mode (allow selection UIs)
+
+## Global rules
+
+These apply to **every** workflow unless explicitly overridden:
+
+1. **Permission prompts auto-approve with `1`.** Whenever `ASKING_PERMIT` is detected, immediately call `answer_permission(allow=true)` (sends `1`). The intent is unattended operation — option `1` ("Yes, once") is always safe and reversible. Override with `--ask-permit`.
+2. **Dialogs auto-dismiss.** `DIALOG` state always triggers `dismiss_dialog()`.
+3. **Screen reads use cmux-get diff mode for non-polling reads** — see Step 2 below. Polling for state still uses lightweight `read-screen --lines 30`.
 
 ## Architecture
 
@@ -102,6 +111,38 @@ Wait 8-10 seconds, then read screen. Handle startup prompts:
 ## Step 2: Detect state (Layer 1)
 
 Read the Target's screen and classify into one of 8 states. This is the foundation for all control actions.
+
+There are **two read modes** — pick the right one for the job:
+
+### A. Lightweight polling read (state detection)
+
+```bash
+cmux read-screen --workspace $WS --surface $TGT --lines 30
+```
+
+Used inside the poll loop. Cheap, returns only the visible viewport. Use this for `detect_state()` because state classification needs the *current* screen, not a diff.
+
+### B. Diff read via cmux-get checkpoints (growth tracking + capture)
+
+For **anything other than per-poll state detection** — progress tracking during long PROCESSING phases, mid-workflow log capture, and the final result capture in Step 5 — share the cmux-get checkpoint file at `.cmux-get/checkpoints.json` so you only fetch *new* content since the last read.
+
+```bash
+# 1. Read full scrollback
+cmux read-screen --workspace $WS --surface $TGT --scrollback > /tmp/cmux-current.txt
+
+# 2. Look up checkpoint key "workspace:N/surface:M" in .cmux-get/checkpoints.json
+#    - If no checkpoint: this is the baseline. Save tail (last 5 lines + hash + total_lines).
+#    - If checkpoint exists: locate tail_lines in current scrollback, return only lines after.
+#    - If tail_lines not found: scrollback overflowed → return everything, warn, re-baseline.
+
+# 3. Always update the checkpoint after reading.
+```
+
+**Why**: long-running execute/monitor workflows generate hundreds of kilobytes of scrollback. Re-reading the whole thing on every capture wastes context. cmux-get's checkpoint format is the canonical "last seen" marker — sharing it means cmux-control and cmux-get stay coherent even if the user switches between them on the same target.
+
+**Checkpoint key format** — must match cmux-get exactly: `"workspace:<N>/surface:<M>"`. See `cmux-get/SKILL.md § Checkpoint System` for the JSON schema. Stale entries (>24h) get pruned by either skill.
+
+### Initial state read
 
 ```bash
 cmux read-screen --workspace $WS --surface $TGT --lines 30
@@ -327,9 +368,10 @@ setup → loop { poll_screen → check_for_anomaly → intervene_or_notify }
 After any workflow completes (or times out):
 
 ```bash
-cmux read-screen --workspace $WS --surface $TGT --lines 50      # final screen
-cmux read-screen --workspace $WS --surface $TGT --scrollback     # full history
+cmux read-screen --workspace $WS --surface $TGT --lines 50      # final visible screen
 ```
+
+For the **full history**, use the cmux-get diff-mode read described in Step 2.B — this returns only what was added since the last checkpoint, dramatically reducing log size on long sessions. The first capture in a session naturally returns everything (no prior checkpoint), and subsequent captures return only the delta. Use `--all` semantics (ignore checkpoint) only when you explicitly need the full scrollback.
 
 Save to `.cmux-control/logs/<YYYY-MM-DD_HHMMSS>/`:
 

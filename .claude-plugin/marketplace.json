@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "cmux-skills",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Cross-session control and context sharing for Claude Code via cmux terminal multiplexer",
   "owner": {
     "name": "Kyubum Shin",
@@ -11,7 +11,7 @@
     {
       "name": "cmux-skills",
       "description": "Remote control (cmux-control) and context import (cmux-get) for Claude Code sessions via cmux",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./",
       "category": "productivity"
     }

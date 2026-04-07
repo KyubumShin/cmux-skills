@@ -1,6 +1,6 @@
 {
   "name": "cmux-skills",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Cross-session control, context sharing, and markdown preview for Claude Code via cmux terminal multiplexer. Includes cmux-control (remote operation), cmux-get (read-only context import), and cmux-md-preview (interactive markdown preview with checkbox sync).",
   "author": {
     "name": "Kyubum Shin",
